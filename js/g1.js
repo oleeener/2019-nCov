@@ -133,7 +133,7 @@
       .attr('y', margin.top/2)
       .attr("text-anchor", "middle")
       .style('fill','#000000')
-      .html('Passenger Traffic (Arrival) by Control Points')
+      .html('HK Passenger Traffic (Arrival) by Control Points')
 
     // legend
     var legend = svg_base.selectAll('.legend')

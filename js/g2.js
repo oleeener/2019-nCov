@@ -45,7 +45,7 @@
       .attr('y', margin.top/2)
       .attr("text-anchor", "middle")
       .style('fill','#000000')
-      .html('Passenger Traffic (Arrival) by Passenger Type')
+      .html('HK Passenger Traffic (Arrival) by Passenger Type')
 
     // legend
     var legend = svg_base.selectAll('.legend')
