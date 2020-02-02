@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- necessary css import //-->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <title>2019-nCov</title>
+    <style>
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: rgb(189,189,189,0.5);
+        color: #000000;
+        text-align: center;
+      }   
+      .container-fluid {
+        padding-bottom: 2rem;
+      }   
+      .domain {
+        display: none;
+      }
+      .tip {
+        pointer-events: none;
+      }
+      .tipbox {
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+  <div class="container-fluid">
+    <div class='row'>
+      <div class='col'>
+        <div class='row'>
+          <div class='col-3'>
+            <select class="custom-select custom-select-sm" id='sel-visitor_type'>
+              <option value='' selected>Select...</option>
+            </select>
+          </div>
+          <div class='col'>
+            <div id='tipbox1' class='tipbox'></div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col'>
+            <div id='chart1'></div>
+          </div>
+        </div>        
+      </div>
+      <div class='col'>
+        <div class='row'>
+          <div class='col-3'>
+            <select class="custom-select custom-select-sm" id='sel-control_points'>
+              <option value='total' selected>Select...</option>
+            </select>            
+          </div>
+          <div class='col-6'>
+            <div id='tipbox2' class='tipbox custom-select-sm'></div>
+          </div>
+          <div class='col-3'>
+            <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+            <label class="btn btn-primary active">
+              <input type="radio" name="radio-chart2_type" id="chart2_num" autocomplete="off" value='num' checked> #
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="radio-chart2_type" id="chart2_perc" autocomplete="off" value='perc'> %
+            </label>
+          </div>         
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col'>
+            <div id='chart2'></div>
+          </div>
+        </div>
+      </div>      
+    </div>
+    <div class='row'>
+      <div class='col'>
+        <div id='chart3'></div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'>
+        <div id='chart4'></div>
+      </div>
+    </div>    
+  </div>
+   <div class="footer">
+    <div>powered by <a href='https://jquery.com/' target=_blank>jQuery</a>, <a href='https://getbootstrap.com/' target=_blank>Bootstrap</a> and <a href='https://d3js.org/' target=_blank>D3.js</a></div>
+  </div>   
+
+  <!-- necessary js import //-->
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/d3.min.js"></script>  
+  <script src="js/d3-geo-projection.v2.min.js"></script>
+  
+  <!-- custom js //-->
+  <script src="js/color.js"></script> 
+
+  <!-- for graphing //-->
+  <script src="data/g1.js"></script>
+  <script src="js/g1.js"></script>  
+  <script src="js/g2.js"></script>  
+
+  <script src="data/g3.js"></script>
+  <script src="data/worldmap.geo.json"></script>
+  <script src="js/g3.js"></script>  
+  <script src="js/g4.js"></script>  
+
+  <script>
+
+   
+  </script>    
+  </body>
+</html>
