@@ -35,22 +35,22 @@
             .html(text); 
     }    
 
-    var addGuide = function(svg,x,y,width,height,value) {
+    var addGuide = function(svg,x,y,width,height,custom_class,value) {
         svg.append('text')
-            .attr('class', 'guide')
+            .attr('class', 'guide '+custom_class)
             .attr('x', x)
             .attr('y', 0)
             .html(value)             
 
         svg.append('line')
-            .attr('class', 'guide')
+            .attr('class', 'guide '+custom_class)
             .attr('x1', 0)
             .attr('y1', y)
             .attr('x2', width)
             .attr('y2', y)
 
         svg.append('line')
-            .attr('class', 'guide')
+            .attr('class', 'guide '+custom_class)
             .attr('x1', x)
             .attr('y1', 0)
             .attr('x2', x)
@@ -61,6 +61,21 @@
         svg.selectAll('line.guide').remove()
         svg.selectAll('text.guide').remove()
     }
+
+    var unnest = function(data, oriKey) {
+      var unnestedData = []
+      $.each(data, function(index, value) {
+        var newData = value.value
+        newData[oriKey] = value.key
+        unnestedData.push(newData)
+      })
+      return unnestedData
+    }
+
+    var stack = function(data, keys) {
+      return d3.stack()
+        .keys(keys)(data)
+    }    
 
     // bar chart
     var chart1 = function() {
@@ -78,7 +93,8 @@
         //console.log(arrival)
 
         // get bar color
-        var c = '#0F4C81'
+        var palette = Color.getPantonePalette(2020);
+        var c = palette[2];
 
         // bar chart
         var id = '#chart1';
@@ -124,7 +140,7 @@
           .attr('y', margin.top/2)
           .attr("text-anchor", "middle")
           .style('fill','#000000')
-          .html('HK Passenger Traffic (Arrival) by Control Points')
+          .html('HK Passenger Traffic (Arrival)')
 
         // update domain
         xScale.domain(d3.map(arrival,d => d.key).keys())
@@ -154,7 +170,7 @@
                 var x = xScale(actual.key) + xScale.bandwidth() / 2;
                 var value = actual.value['total'].toLocaleString();
 
-                addGuide(svg,x,y,width,height,value)          
+                addGuide(svg,x,y,width,height,'',value)          
                 event.preventDefault();
             })
             .on('mouseleave', function (actual,i) {  
@@ -229,7 +245,7 @@
           .attr('y', margin.top/2)
           .attr("text-anchor", "middle")
           .style('fill','#000000')
-          .html('HK Passenger Traffic (Arrival) by Control Points')
+          .html('HK Passenger Traffic (Arrival)')
 
         // update domain
         xScale.domain(d3.map(arrival,d => d.key).keys())
@@ -286,7 +302,7 @@
                 var x = xScale(actual.key) + xScale.bandwidth() / 2;
                 var value = actual.value['total'].toLocaleString();
 
-                addGuide(svg,x,y,width,height,value)          
+                addGuide(svg,x,y,width,height,'',value)          
                 event.preventDefault();
             })
             .on('mouseleave', function (actual,i) {  
@@ -306,7 +322,7 @@
                 var x = xScale(actual.key) + xScale.bandwidth() / 2;
                 var value = actual.value['total_ex_airport'].toLocaleString();
 
-                addGuide(svg,x,y,width,height,value)          
+                addGuide(svg,x,y,width,height,'',value)          
                 event.preventDefault();
             })
             .on('mouseleave', function (actual,i) {  
@@ -360,4 +376,130 @@
 
     chart2()
 
+    var chart3 = function() {
+        // stacked bar chart
+        var data = all_data.filter(d => (d.control_points != 'Total') & (d.direction == 'arrival') & (d.visitor_type!='total'));
+
+        var list_control_points = d3.map(data, d => d.control_points).keys().sort()
+
+        var arrival = d3.nest()
+            .key(d => d.date_str)               
+            .rollup(function (d) {
+              out = {}
+              $.each(list_control_points, function(index,value) {
+                out[value] = d3.sum(d.filter(w => w.control_points == value), v => v.num_cust);
+              });
+              out['total'] = d3.sum(d, v => v.num_cust);
+              return out;
+            })
+            .entries(data)       
+
+        var palette = Color.createSwatch('','',list_control_points.length)
+        var c = Color.getPantonePalette(2020)[2];
+
+        var arrival_stacked = unnest(arrival, 'date_str')
+        var arrival_stacked = stack(arrival_stacked, list_control_points)
+
+        // bar chart
+        var id = '#chart3';
+
+        var margin = ({top: 50, right: 20, bottom: 50, left: 20}),
+            width = $(id).width() - margin.left - margin.right,
+            height = 300;
+
+        var xScale = d3.scaleBand()      
+          .range([margin.left,width])
+          .padding(0.2) 
+
+        var yScale = d3.scaleLinear()
+          .range([height, 0])
+
+        var zScale = d3.scaleOrdinal()
+            .range(palette)          
+
+        var xAxis = g => g
+          .attr("transform", `translate(0,${height})`)
+          .attr('class','x axis')
+
+        var yAxis = g => g
+          .attr("transform", `translate(${margin.left},0)`)
+          .attr('class','y axis')
+
+        var svg_base = d3.select(id)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+
+        var svg = svg_base.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        svg.append("g")
+            .attr('class','x axis')
+            .call(xAxis);
+
+        svg.append("g")
+          .attr('class','y axis')
+          .call(yAxis);
+
+        // title
+        svg_base.append('text')
+          .attr('x', (width + margin.left + margin.right)/2)
+          .attr('y', margin.top/2)
+          .attr("text-anchor", "middle")
+          .style('fill','#000000')
+          .html('HK Passenger Traffic (Arrival) by Control Points')
+
+        // update domain
+        xScale.domain(d3.map(arrival,d => d.key).keys())
+        yScale.domain([0, d3.max(arrival_stacked, d => d3.max(d, d => d[1]))]).nice()
+        zScale.domain(list_control_points)
+
+        svg.select(".y")
+            .transition()
+            .call(d3.axisLeft(yScale).ticks(null, "s"))
+
+        svg.select(".x")
+            .transition()
+            .call(d3.axisBottom(xScale).tickSizeOuter(0))
+
+        list_control_points.forEach(function(val,ind) {
+            //console.log(val,ind)
+            var bar = svg.selectAll('.rect-'+val.replace(/ /g,''))
+                .data(arrival_stacked[ind]);
+
+            bar.enter()
+                .append("rect")
+                .attr("class", 'rect-'+val.replace(/ /g,''))
+                .attr("x", (d, i) => xScale(d.data.date_str)) 
+                .attr("y", d => yScale(d[1]))
+                .attr("height", d => yScale(d[0]) - yScale(d[1]))  
+                .attr("width", xScale.bandwidth())
+                .attr("fill", zScale(val))
+                .on('mouseenter', function (actual, i) {
+                    var y = yScale(actual[1])
+                    var x = xScale(actual.data.date_str) + xScale.bandwidth() / 2;
+                    var value = val + ':' + (actual[1]-actual[0]).toLocaleString();
+                    var custom_class = (x >= (width + margin.left + margin.right)*0.75)?'anchor_end chart3_guide':'chart3_guide';
+                    //console.log(custom_class)
+                    addGuide(svg,x,y,width,height,custom_class,value)          
+                    event.preventDefault();
+                })
+                .on('mouseleave', function (actual,i) {  
+                    removeGuide(svg)
+                });      
+        });
+
+        var getPoint = function(date) {
+            var x = xScale(date)+xScale.bandwidth()/2+10;
+            var y = yScale(arrival.filter(d => d.key == date)[0].value['total'])-10;
+            return [x,y]           
+        }
+
+        // annotate
+        addAnnotation(svg, getPoint('Feb 08'),[20,40],c,'Launched 14-day compulsory quarantine')
+        addAnnotation(svg, getPoint('Feb 04'),[20,70],c,'Closure of 4 Control Points, inc. Lo Wu')
+        addAnnotation(svg, getPoint('Jan 30'),[20,40],c,'Closure of 4 Control Points, inc. High Speed Rail Station')        
+    }  
+     
+    chart3();
 //}());
