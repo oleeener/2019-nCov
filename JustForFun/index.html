@@ -66,7 +66,11 @@
       #chart6 .point {
         fill: #0F4C81;     
         opacity: 0.5;  
-      }      
+      }  
+      #chart7 .x.axis .tick text{
+        transform: rotate(-45deg);
+        text-anchor: end;
+      }          
 
     </style>
   </head>
@@ -126,13 +130,26 @@
       <div class='col'>
         <div id='chart5'></div>
       </div>
-    </div>          
+    </div> 
+
+    <div class='row'>
+      <div class='col-3'>
+        <select class="custom-select custom-select-sm" id='sel-arrival_mth'>
+        </select>            
+      </div>         
+    </div>               
 
     <div class='row'>
       <div class='col'>
         <div id='chart6'></div>
-      </div>
-    </div>              
+      </div>    
+    </div>     
+
+    <div class='row'>
+      <div class='col'>
+        <div id='chart7'></div>
+      </div>    
+    </div>                  
 
 
     <div class='row'>
