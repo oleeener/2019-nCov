@@ -1,8 +1,16 @@
 // require d3.js
 var Color = (function () {
     var createColorSwatch = function(color1, color2, numColors) {
-      if (color1 == '' && color2 == '') {
+      if (color1 == '' && color2 != '') {
+        color1 = color2;
+      } else if (color1 != '' && color2 == '') {
+        color2 = color1;
+      }
+
+      if (color1 == '' && color2 == '' && numColors > 1) {
       	return d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), numColors).reverse()
+      } else if (color1 == '' && color2 == '' && numColors == 1) {
+        return getPantonePalette(2020)[1];
       } else if (color1 === color2) {
         return [color1];
       } else {
@@ -24,8 +32,15 @@ var Color = (function () {
 	        .style("fill", d => d)
     }
 
+    var getPantonePalette = function(year) {
+      // 2 - pantone color 2020
+      var palette = ['#658DC6','#84898C','#0F4C81','#F5B895','#A58D7F'];
+      return palette;
+    }
+
     return {
     	createSwatch: createColorSwatch, 
-    	displaySwatch: displayColorSwatch
+    	displaySwatch: displayColorSwatch,
+      getPantonePalette: getPantonePalette
     }
 }());
