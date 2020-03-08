@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Sticky Selection</title>
+
+    <link href="../common/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      .container-fluid {
+        margin-top: 80px;
+      }
+      .card {
+        margin: 10px 0px 10px 0px;
+      }
+      div.sticky-btn {
+        position: fixed;
+        top: 302px;
+        font-size: 20px;
+        z-index: 200;
+        right: 0;
+        padding-right: 20px;
+        cursor: pointer;
+      }     
+      div.sticky-content {
+        position: fixed;
+        top: 300px;
+        font-size: 20px;
+        z-index: 100;
+        right: 0;
+        width: 0;
+        height: 50px;
+        transition: width 0.8s;
+      }  
+      div.sticky-content .card {
+        margin: 0;
+        /*transition: 0.3s;    */
+      }   
+      div.sticky-content .card-body {
+        padding: 1rem;
+      }
+      #sel-master1 {
+        margin-bottom: 1rem;
+      }  
+      div.sticky-content .card-header {
+        padding: 0 15px;
+      }          
+      div.sticky-content .card-header-content {
+        display: inline-block;
+      } 
+      div.sticky-content #btn-control_close {
+        cursor: pointer;
+      }              
+      .hide {
+        display: none;
+      }
+      .right {
+        float: right;
+      }
+
+      div.sticky-btn .bar1, div.sticky-btn .bar2, div.sticky-btn .bar3 {
+        width: 30px;
+        height: 4px;
+        background-color: #333;
+        margin: 4px 0;
+        transition: 0.4s;
+      }
+
+      div.sticky-btn.change .bar1 {
+        -webkit-transform: rotate(-45deg) translate(-5.8px, 5.8px);
+        transform: rotate(-45deg) translate(-5.8px, 5.8px);
+      }
+
+      div.sticky-btn.change .bar2 {
+        opacity: 0;
+      }
+
+      div.sticky-btn.change .bar3 {
+        -webkit-transform: rotate(45deg) translate(-8px, -5.8px);
+        transform: rotate(45deg) translate(-5.8px, -5.8px);
+      } 
+
+      .glow {
+        -webkit-animation: glow 0.6s ease-in-out 2 alternate;
+        -moz-animation: glow 0.6s ease-in-out 2 alternate;
+        animation: glow 0.6s ease-in-out 2 alternate;    
+      }        
+
+      @-webkit-keyframes glow {
+        from {
+          box-shadow: 0;
+        }
+        to {
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+      }  
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">Fixed navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+    </ul>
+    <form class="form-inline mt-2 mt-md-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>    
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>              
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sticky-btn right" id='btn-control'>
+    <div class="bar1"></div>
+    <div class="bar2"></div>
+    <div class="bar3"></div>
+  </div>  
+  <div class="sticky-content" id='master_control'>
+    <div class="card">
+      <div class="card-header">              
+        <div class='card-header-content'>Setting</div>
+      </div>
+      <div class="card-body">
+          <select class="form-control form-control-sm" id='sel-master1'>
+            <option value="1" selected>master 1 - option 1</option>
+            <option value="2">master 1 - option 2</option>
+            <option value="3">master 1 - option 3</option>
+          </select>   
+          <select class="form-control form-control-sm" id='sel-master2'>
+            <option value="1" selected>master 2 - option 1</option>
+            <option value="2">master 2 - option 2</option>
+            <option value="3">master 2 - option 3</option>
+          </select>                           
+      </div>
+    </div>       
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card master2-card" id='card1'>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <select class="form-control form-control-sm" id='sel3'>
+            <option value="1" selected>sel3 - option 1</option>
+            <option value="2">sel3 - option 2</option>
+            <option value="3">sel3 - option 3</option>
+          </select>                
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card master1-card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <select class="form-control form-control-sm" id='sel1'>
+            <option value="1" selected>sel1 - option 1</option>
+            <option value="2">sel1 - option 2</option>
+            <option value="3">sel1 - option 3</option>
+          </select>                
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card master1-card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <select class="form-control form-control-sm" id='sel2'>
+            <option value="1" selected>sel2 - option 1</option>
+            <option value="2">sel2 - option 2</option>
+            <option value="3">sel2 - option 3</option>
+          </select>            
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+  </div>        
+</div>
+    <script src="../common/js/jquery-3.4.1.min.js"></script>
+    <script src="../common/js/popper.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(".master2-card, .master1-card").on(
+          "webkitAnimationEnd oanimationend msAnimationEnd animationend",
+          function() {
+              $(this).removeClass("glow");
+          }
+      );
+
+      $('#btn-control').on('click',function(){
+        if ($('#btn-control').hasClass('change')) {
+          $('#btn-control').removeClass("change");  
+          $('#master_control').width('0');
+        } else {
+          $('#btn-control').addClass("change");  
+          $('#master_control').width('200px');         
+        }
+        
+      })    
+
+      $('#sel-master1').on('change', function() {
+        console.log('change master1');
+        var sel = $(this).children("option:selected").val();
+        console.log(sel);
+        $('#sel1').val(sel);
+        $('#sel2').val(sel);
+        $('.master1-card').addClass('glow');
+      })
+      $('#sel-master2').on('change', function() {
+        console.log('change master2');
+        var sel = $(this).children("option:selected").val();
+        $('#sel3').val(sel);
+        $('.master2-card').addClass('glow');
+      })
+    </script>
+  </body>
+</html>
